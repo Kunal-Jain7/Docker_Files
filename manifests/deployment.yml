@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: kunalapp1nginxaks 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kunalapp1nginxaks
+  template:
+    metadata:
+      labels:
+        app: kunalapp1nginxaks 
+    spec:
+      containers:
+        - name: kunalapp1nginxaks 
+          image: kunalaksdevopsacr.azurecr.io/kunalapp1nginxaks
+          ports:
+          - containerPort: 80
