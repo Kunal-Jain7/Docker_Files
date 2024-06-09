@@ -41,7 +41,7 @@ stages:
     - bash: echo Before copying contents in built artifact directory; ls -R $(Build.ArtifactStagingDirectory)
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/kube-manifests'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/manifests/kube-manifests'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
         OverWrite: true
@@ -49,5 +49,5 @@ stages:
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'kube-manifests'
+        ArtifactName: 'manifests/kube-manifests'
         publishLocation: 'Container'
