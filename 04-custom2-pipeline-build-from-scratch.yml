@@ -10,7 +10,7 @@ variables:
   tag: $(build.buildId)
 
 stages:
-  - stage: Build stage
+  - stage: Build
     displayName: Build Stage
     jobs:
       - job: Build
