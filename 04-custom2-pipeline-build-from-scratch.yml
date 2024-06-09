@@ -1,0 +1,43 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+variables:
+  tag: $(build.buildId)
+
+stages:
+  - stage: Build stage
+    displayName: Build Stage
+    jobs:
+      - job: Build
+        displayName: Build Job
+        pool: 'ubuntu-latest'
+        
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'Manual-aksdevopsacr-svc'
+            repository: 'custom2aksnginxapp1'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: |
+              $(tag)
+              $(Build.SourceVersion)
+        - bash: echo Contents in system default working directory; ls -R $(System.DefaultWorkingDirectory)
+        - bash: echo Before copying contents in built artifact directory; ls -R $(Build.ArtifactStagingDirectory)
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(System.DefaultWorkingDirectory)/manifests/kube-manifests'
+            Contents: '**'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            OverWrite: true
+        - bash: echo After copying to Build Artifact Directory; ls -R $(Build.ArtifactStagingDirectory)
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'manifests/kube-manifests'
+            publishLocation: 'Container'
