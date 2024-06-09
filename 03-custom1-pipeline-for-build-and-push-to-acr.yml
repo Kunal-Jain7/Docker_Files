@@ -37,15 +37,15 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - bash: echo Contents in system default working directory; ls -R ${System.DefaultWorkingDirectory}
-    - bash: echo Before copying contents in built artifact directory; ls -R ${Build.ArtifactStagingDirectory}
+    - bash: echo Contents in system default working directory; ls -R $(System.DefaultWorkingDirectory)
+    - bash: echo Before copying contents in built artifact directory; ls -R $(Build.ArtifactStagingDirectory)
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '${System.DefaultWorkingDirectory}/manifests'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/kube-manifests'
         Contents: '**'
-        TargetFolder: '${Build.ArtifactStagingDirectory}'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
         OverWrite: true
-    - bash: echo After copying to Build Artifact Directory; ls -R ${Build.ArtifactStagingDirectory} 
+    - bash: echo After copying to Build Artifact Directory; ls -R $(Build.ArtifactStagingDirectory)
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
